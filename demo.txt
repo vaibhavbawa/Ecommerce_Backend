@@ -1,0 +1,31 @@
+// app.delete(`${base_url}/delet/product`,(req,res)=>{
+//     // const {id} = req.params
+//     console.log(req.body);
+//     product.findIndex(req.body);
+//     res.status(200).json({data:req.body,massge:`Product delet succesfuly`});
+// });
+
+
+
+
+// app.delete(`${base_url}/delet/product`,(req,res)=>{
+//     // const {id} = req.params
+//    const id = req.params.id;
+//    const index = product.findIndex((res)=>{
+//     return (res.id == Number.parseInt(id));
+//    })
+
+//    if(index >=0){
+//     let pro = product[index]
+//     product.splice(index, 1)
+//     res.json(pro);
+//    }else{
+//     // res.status(404);
+//     res.status(200).json({data:id,massge:`Product deleted succesfuly`});
+//    }
+// });
+
+
+{
+  "id":40,"categoryId":1,"name":"test","discription":"test","price":"1000"
+}
