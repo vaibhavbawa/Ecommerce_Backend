@@ -1,19 +1,46 @@
 const express = require("express");
 const cors = require('cors')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+// app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
-app.use(bodyParser.json())
+// app.use(bodyParser.json())
 
-const {product,category}=require('./const')
+const {product,category,users} = require('./const')
 
 const base_url='/api/v1';
+
+app.post(`${base_url}/login/users`,(req,res)=>{
+    console.log(req.body);
+    // user.push(req.body);
+    /*
+    1. find user 
+    2. if user not exist then send 404
+    3. if user find then try to math password
+    4. if password match successfully then login 200
+    5. if passwpod not match then 401
+    */
+    const savedUser = users.find((element) => element.email === req.body.emailOrmobile || element.mobileNo === Number(req.body.emailOrmobile));
+    if(!savedUser){
+       return res.status(404).json({ massge:`user not found`, statusCode:404});
+    }
+    console.log("savedUser",savedUser);
+    if(savedUser.password !== req.body.password ){
+       return res.status(401).json({massge:`Invalid Crediantial`,statusCode:401})
+    }
+    res.status(200).json({data:req.body,massge:`user login succesfuly`,statusCode:200});
+});
+
+
+// app.get(`${base_url}/get/login/user`,(req,res)=>{
+//     res.status(200).json({data:user,massge:`user data fetch succesfuly`});
+// })
 
 app.get(`${base_url}/get/home`,(req,res)=>{
 res.status(200).json({massge:"hello vaibhav"});
@@ -25,6 +52,13 @@ app.get(`${base_url}/get/category`,(req,res)=>{
 
 app.get(`${base_url}/get/category-by-id/:id`,(req,res)=>{
     // const {id} = req.params
+    const filteredCategories = category.filter(element => element.id == req.params.id);
+    if (filteredCategories.length === 0) {
+        res.status(404).json({ data: '', message: `Category with categoryId:${req.params.id} Not found` });
+        return;
+    }
+    res.status(200).json({ data: filteredCategories, message: `Category with categoryId:${req.params.id} found successfully` });
+    
     console.log(req.params.id);
     const result = category.find((element) => element.id == req.params.id );
     if(!result){
@@ -34,9 +68,7 @@ app.get(`${base_url}/get/category-by-id/:id`,(req,res)=>{
     res.status(200).json({data:result,massge:`Category with categoryId:${req.params.id} found succesfuly`});
 });
 
-
-
-app.get(`${base_url}/get/product`, (Req, res)=>{
+app.get(`${base_url}/get/product`, (req, res)=>{
     res.status(200).json({data:product,massge:"All product fetch are succesfully"});
 });
 
